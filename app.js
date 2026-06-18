@@ -423,5 +423,15 @@ $("search").addEventListener("blur", () => {
   setTimeout(hideSuggestions, 150);
 });
 
+/* ─── TUTORIAL TABS ─────────────────────────────────── */
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tutorial-content").forEach(c => c.style.display = "none");
+    btn.classList.add("active");
+    $("tab-" + btn.dataset.tab).style.display = "block";
+  });
+});
+
 /* ─── INIT ──────────────────────────────────────────── */
 applySettings();
