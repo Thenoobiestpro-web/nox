@@ -113,7 +113,7 @@ html, body {
   color: rgba(255,255,255,0.35);
   pointer-events: none;
   transition: color 0.2s;
-  z-index: 2;
+  z-index: 3;
 }
 
 #search {
@@ -132,7 +132,7 @@ html, body {
   transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
   caret-color: var(--accent);
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 #search::placeholder { color: transparent; }
@@ -163,7 +163,8 @@ html, body {
   transition: opacity 0.2s;
 }
 
-#search-wrap:focus-within #placeholder-text { opacity: 0; }
+#search-wrap:focus-within #placeholder-text,
+#search-wrap.has-value #placeholder-text { opacity: 0; }
 
 .typed-cursor {
   display: inline-block;
@@ -188,26 +189,32 @@ html, body {
 /* ADD — before or after the engine pills section */
 #suggestions {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% - 26px);
   left: 0;
   width: 100%;
+  padding-top: 26px;
   background: rgba(12,12,20,0.92);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0 0 24px 24px;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   box-shadow: 0 16px 48px rgba(0,0,0,0.5);
-  overflow: hidden;
+  overflow-y: auto;
   display: none;
-  z-index: 100;
+  z-index: 0;
   opacity: 0;
-  transform: translateY(-6px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  max-height: 0;
+  transform: translateY(-4px) scaleY(0.92);
+  transform-origin: top center;
+  transition: opacity 0.28s ease,
+              transform 0.32s cubic-bezier(0.34,1.56,0.64,1),
+              max-height 0.32s ease;
 }
 
 #suggestions.visible {
   opacity: 1;
-  transform: translateY(0);
+  max-height: 360px;
+  transform: translateY(0) scaleY(1);
 }
 
 .suggestion-item {
@@ -219,6 +226,16 @@ html, body {
   color: rgba(255,255,255,0.75);
   cursor: pointer;
   transition: background 0.15s;
+  opacity: 0;
+  transform: translateY(-6px);
+  animation: suggestionSlideIn 0.3s ease forwards;
+}
+
+@keyframes suggestionSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .suggestion-item:hover,
