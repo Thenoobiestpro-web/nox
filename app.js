@@ -1,3 +1,5 @@
+console.log("Nox loaded, enjoy your new tab!, this was made possible by Fluxio, check out his work at: https://github.com/Thenoobiestpro-web");
+
 /* ─── CONFIG ────────────────────────────────────────── */
 const PRESETS = {
   gradient1: "linear-gradient(135deg,#0f0c29,#302b63,#24243e)",
@@ -81,14 +83,7 @@ function runTyper() {
 
 runTyper();
 
-/* hide placeholder while typing */
-$("search").addEventListener("input", () => {
-  placeholderEl.style.opacity = $("search").value.length > 0 ? "0" : "1";
-});
-
-$("search").addEventListener("blur", () => {
-  placeholderEl.style.opacity = $("search").value.length > 0 ? "0" : "1";
-});
+/* placeholder visibility is now handled entirely by CSS :focus-within */
 
 /* ─── CLOCK ─────────────────────────────────────────── */
 const DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -202,11 +197,23 @@ function save() {
 }
 
 /* ─── SEARCH ────────────────────────────────────────── */
+function isLikelyURL(str) {
+  if (/^https?:\/\//i.test(str)) return true;   // already has protocol
+  if (/\s/.test(str)) return false;             // spaces = definitely a search
+  return /^[a-z0-9-]+(\.[a-z0-9-]+)+([\/?#].*)?$/i.test(str); // looks like a domain
+}
+
 $("search").addEventListener("keydown", (e) => {
   if (e.key !== "Enter") return;
-  const q = encodeURIComponent(e.target.value.trim());
-  if (!q) return;
+  const raw = e.target.value.trim();
+  if (!raw) return;
 
+  if (isLikelyURL(raw)) {
+    window.location.href = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+    return;
+  }
+
+  const q = encodeURIComponent(raw);
   const engines = {
     google:     `https://www.google.com/search?q=${q}`,
     duckduckgo: `https://duckduckgo.com/?q=${q}`,
@@ -349,7 +356,7 @@ function renderSuggestions(items, query) {
         + text.slice(idx + q.length);
     }
     return `
-      <div class="suggestion-item" data-index="${i}">
+      <div class="suggestion-item" data-index="${i}" style="animation-delay:${i * 0.04}s">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <span>${label}</span>
       </div>`;
@@ -363,7 +370,6 @@ function renderSuggestions(items, query) {
       e.preventDefault();
       const text = currentSuggestions[+el.dataset.index];
       $("search").value = text;
-      placeholderEl.style.opacity = "0";
       hideSuggestions();
       $("search").dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
     });
@@ -383,10 +389,14 @@ function hideSuggestions() {
 async function fetchSuggestions(query) {
   if (!query) { hideSuggestions(); return; }
   try {
-    const res = await fetch(
-      `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=list`,
-      { signal: AbortSignal.timeout(2000) }
+    const target = encodeURIComponent(
+      `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=list`
     );
+    const res = await fetch(
+      `https://corsproxy.io/?url=${target}`,
+      { signal: AbortSignal.timeout(2500) }
+    );
+    if (!res.ok) throw new Error("bad response");
     const data = await res.json();
     renderSuggestions((data[1] || []).slice(0, 6), query);
   } catch {
@@ -396,7 +406,7 @@ async function fetchSuggestions(query) {
 
 $("search").addEventListener("input", () => {
   const val = $("search").value;
-  placeholderEl.style.opacity = val.length > 0 ? "0" : "1";
+  $("search-wrap").classList.toggle("has-value", val.length > 0);
   clearTimeout(suggestDebounce);
   suggestDebounce = setTimeout(() => fetchSuggestions(val.trim()), 0);
 });
