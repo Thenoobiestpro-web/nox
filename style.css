@@ -314,6 +314,34 @@ html, body {
   transform: rotate(45deg);
 }
 
+/* ─── GITHUB BUTTON ─────────────────────────────────── */
+#github-btn {
+  position: absolute;
+  bottom: 24px;
+  right: 76px; /* sits to the left of #settings-btn */
+  z-index: 20;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: all 0.25s;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+#github-btn:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.13);
+  border-color: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
 /* ─── SETTINGS PANEL ────────────────────────────────── */
 #settings-panel {
   position: absolute;
