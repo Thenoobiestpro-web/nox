@@ -32,11 +32,9 @@ function load() {
 try {
 const saved = localStorage.getItem("Nox");
 
-```
 return saved
   ? { ...defaultConfig, ...JSON.parse(saved) }
   : { ...defaultConfig };
-```
 
 } catch {
 return { ...defaultConfig };
@@ -74,7 +72,6 @@ const current = phrases[phraseIdx];
 if (!deleting) {
 charIdx++;
 
-```
 placeholderEl.textContent = current.slice(0, charIdx);
 
 if (charIdx === current.length) {
@@ -83,11 +80,9 @@ if (charIdx === current.length) {
 } else {
   typingTimer = setTimeout(runTyper, 68);
 }
-```
 
 } else {
 
-```
 charIdx--;
 
 placeholderEl.textContent = current.slice(0, charIdx);
@@ -99,7 +94,6 @@ if (charIdx === 0) {
 } else {
   typingTimer = setTimeout(runTyper, 38);
 }
-```
 
 }
 }
@@ -311,7 +305,6 @@ JSON.stringify(config)
 
 } catch (e) {
 
-```
 const slim = {
   ...config,
   wallpaper: null
@@ -325,7 +318,6 @@ localStorage.setItem(
 showToast(
   "Wallpaper too large to save — it'll reset on refresh."
 );
-```
 
 }
 }
@@ -334,7 +326,7 @@ showToast(
 
 function isLikelyURL(str) {
 
-if (/^https?:///i.test(str)) {
+if (/^https?:\/\//i.test(str)) {
 return true;
 }
 
@@ -351,14 +343,12 @@ if (!raw) return;
 
 if (isLikelyURL(raw)) {
 
-```
 window.location.href =
   /^https?:\/\//i.test(raw)
     ? raw
     : `https://${raw}`;
 
 return;
-```
 
 }
 
@@ -366,7 +356,6 @@ const q = encodeURIComponent(raw);
 
 const engines = {
 
-```
 google:
   `https://www.google.com/search?q=${q}`,
 
@@ -381,7 +370,6 @@ bing:
 
 startpage:
   `https://www.startpage.com/do/search?q=${q}`
-```
 
 };
 
@@ -407,13 +395,11 @@ document.querySelectorAll(".pill").forEach(pill => {
 
 pill.addEventListener("click", () => {
 
-```
 config.engine =
   pill.dataset.engine;
 
 save();
 applySettings();
-```
 
 });
 
@@ -455,9 +441,7 @@ e.target !== settingsBtn &&
 !settingsBtn.contains(e.target)
 ) {
 
-```
 panel.style.display = "none";
-```
 
 }
 });
@@ -553,7 +537,6 @@ document.querySelectorAll(".preset").forEach(preset => {
 
 preset.addEventListener("click", () => {
 
-```
 config.preset =
   preset.dataset.preset;
 
@@ -561,7 +544,6 @@ config.wallpaper = null;
 
 applySettings();
 save();
-```
 
 });
 
@@ -584,7 +566,6 @@ URL.createObjectURL(file);
 
 img.onload = () => {
 
-```
 const canvas =
   document.createElement("canvas");
 
@@ -631,7 +612,6 @@ save();
 showToast(
   "Wallpaper set — may not persist on refresh."
 );
-```
 
 };
 
@@ -663,7 +643,6 @@ $("importBtn").onclick = () => {
 
 try {
 
-```
 config = {
   ...defaultConfig,
   ...JSON.parse(
@@ -675,15 +654,12 @@ save();
 applySettings();
 
 showToast("Configuration imported");
-```
 
 } catch (e) {
 
-```
 alert(
   "Invalid JSON — check the format and try again."
 );
-```
 
 }
 };
@@ -712,7 +688,6 @@ activeSuggestion = -1;
 suggestEl.innerHTML =
 items.map((text, i) => {
 
-```
   const lower =
     text.toLowerCase();
 
@@ -774,7 +749,6 @@ items.map((text, i) => {
     </div>
   `;
 }).join("");
-```
 
 suggestEl.style.display =
 "block";
@@ -787,7 +761,6 @@ suggestEl
 .querySelectorAll(".suggestion-item")
 .forEach(el => {
 
-```
   el.addEventListener(
     "mousedown",
     (e) => {
@@ -809,7 +782,6 @@ suggestEl
   );
 
 });
-```
 
 }
 
@@ -821,7 +793,6 @@ suggestEl.classList.remove(
 
 setTimeout(() => {
 
-```
 suggestEl.style.display =
   "none";
 
@@ -833,7 +804,6 @@ activeSuggestion =
 
 currentSuggestions =
   [];
-```
 
 }, 200);
 }
@@ -842,16 +812,13 @@ async function fetchSuggestions(query) {
 
 if (!query) {
 
-```
 hideSuggestions();
 return;
-```
 
 }
 
 try {
 
-```
 const target =
   encodeURIComponent(
     `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}&type=list`
@@ -877,13 +844,10 @@ renderSuggestions(
   (data[1] || []).slice(0, 6),
   query
 );
-```
 
 } catch {
 
-```
 hideSuggestions();
-```
 
 }
 }
@@ -892,7 +856,6 @@ $("search").addEventListener(
 "input",
 () => {
 
-```
 const val =
   $("search").value;
 
@@ -915,7 +878,6 @@ suggestDebounce =
       ),
     0
   );
-```
 
 }
 );
@@ -924,7 +886,6 @@ $("search").addEventListener(
 "keydown",
 (e) => {
 
-```
 if (
   suggestEl.style.display !==
   "block"
@@ -998,7 +959,6 @@ if (e.key === "ArrowDown") {
 
   hideSuggestions();
 }
-```
 
 }
 );
@@ -1019,7 +979,6 @@ document
 .querySelectorAll(".tab-btn")
 .forEach(btn => {
 
-```
 btn.addEventListener(
   "click",
   () => {
@@ -1042,7 +1001,6 @@ btn.addEventListener(
       .style.display = "block";
   }
 );
-```
 
 });
 
@@ -1067,7 +1025,6 @@ function loadFavourites() {
 
 try {
 
-```
 const saved =
   localStorage.getItem(
     "NoxFavourites"
@@ -1083,13 +1040,10 @@ const parsed =
 return Array.isArray(parsed)
   ? parsed
   : [...DEFAULT_FAVOURITES];
-```
 
 } catch {
 
-```
 return [...DEFAULT_FAVOURITES];
-```
 
 }
 }
@@ -1111,7 +1065,6 @@ function getFavicon(url) {
 
 try {
 
-```
 const hostname =
   new URL(url).hostname;
 
@@ -1120,13 +1073,10 @@ return (
   `?domain=${encodeURIComponent(hostname)}` +
   `&sz=32`
 );
-```
 
 } catch {
 
-```
 return "";
-```
 
 }
 }
@@ -1145,7 +1095,6 @@ container.innerHTML = "";
 favourites.forEach(
 (favourite, index) => {
 
-```
   const item =
     document.createElement("div");
 
@@ -1254,7 +1203,6 @@ favourites.forEach(
 
   container.appendChild(item);
 }
-```
 
 );
 }
@@ -1328,13 +1276,11 @@ favouriteModal.addEventListener(
 "click",
 (e) => {
 
-```
 if (
   e.target === favouriteModal
 ) {
   closeFavouriteModal();
 }
-```
 
 }
 );
@@ -1345,7 +1291,6 @@ document.addEventListener(
 "keydown",
 (e) => {
 
-```
 if (
   e.key === "Escape" &&
   favouriteModal.classList.contains(
@@ -1355,7 +1300,6 @@ if (
 
   closeFavouriteModal();
 }
-```
 
 }
 );
@@ -1367,7 +1311,6 @@ $("save-favourite")
 "click",
 () => {
 
-```
   const name =
     favouriteName.value.trim();
 
@@ -1457,7 +1400,6 @@ $("save-favourite")
     `${name} added to favourites`
   );
 }
-```
 
 );
 
@@ -1472,7 +1414,6 @@ input.addEventListener(
 "keydown",
 (e) => {
 
-```
   if (e.key === "Enter") {
 
     e.preventDefault();
@@ -1480,7 +1421,6 @@ input.addEventListener(
     $("save-favourite").click();
   }
 }
-```
 
 );
 });
